@@ -30,5 +30,15 @@ scripts/00_test_slice.py (download + load test slice), data/raw/*.csv and data/j
 - Sightings window: 2019-2025.
 - GitHub: no remote created; user creates the repo and pushes.
 
-### Next (Session 2)
-Cleaning and data-quality SQL: calendar spine, missing/duplicate temperature hours/days for Tacoma, GBIF null-date/coordinate checks. Full Tacoma download first (ask before large download).
+
+## Session 2 (2026-11-09): NOAA download, load, data-quality SQL
+Done: scripts/01_download_noaa.py (hourly, one CSV per station-year, 13 MB, git-ignored), scripts/build_db.py (load + run sql/), sql/01_clean.sql, 02_calendar.sql, 03_dq_suspect_values.sql, outputs/dq_noaa_*.csv, requirements.txt, run_all.sh.
+Data: Tacoma 9446484 hourly 1996-01-01 to 2026-11-09 (269,819 rows); Seattle 9447130 1996-01-01 to 2019-01-02 (201,659 rows). Timestamps UTC. CSV columns: Date Time, Water Temperature, X, N, R (NOAA flags).
+Checks (reconciled: raw rows = kept rows, 0 duplicates, both stations):
+- Missing hours vs hourly spine: Tacoma 681 (678 are one gap 1996-12-03 19:00 to 1997-01-01 00:00; the rest are single hours), Seattle 8.
+- Null temperature: Tacoma 12,445, Seattle 7,754. Every null row is NOAA-flagged and every flagged row is null (observation, not a documented rule).
+- Tacoma 2019-2026 has no missing hours; nulls per year 74, 2, 20, 1, 2, 7, 9, 22 (2026 partial).
+- Unflagged values outside 3-22 C (my plausibility screen): Seattle 4 (1996-10-13 reads -0.9 to -0.7; 2000-06-25 reads 0.0), Tacoma 3 (24.0 on 2005-07-05, 2.6 on 2008-01-22, 2.7 on 2009-03-27; full list in outputs/dq_noaa_suspect_values.csv). Not removed; decide in Session 3.
+- Hand check: Tacoma 2021-07-15 in pandas vs DuckDB, n=24, mean 13.2042, match.
+Caveats: 2026 is partial (last hour 2026-11-09 20:00 UTC); exclude the partial last day and decide whether to use 2026. DuckDB 2.0 note: relations no longer have fetchone(); use con.execute(...).fetchone().
+Next (Session 3): daily aggregation with a minimum-hours rule, day-of-year climatology and 90th percentile (baseline period to be decided), heatwave detection (gaps-and-islands), then a short Opus review of the logic. Seattle vs Tacoma overlap check in 1996-2018 also pending.
