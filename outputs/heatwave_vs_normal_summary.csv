@@ -1,0 +1,5 @@
+analysis_id,n_hw_months,n_normal_months,n_informative_years,raw_mean_share_hw,raw_mean_share_normal,adj_anomaly_hw,adj_anomaly_normal,adj_difference,pearson_hwfraction_vs_adj_anomaly
+JunOct_10d,3,32,2,0.1152,0.1297,-0.0076,0.0007,-0.0083,-0.089
+JunOct_any_day,8,27,5,0.1153,0.1324,-0.0084,0.0025,-0.0108,-0.089
+all_months_5d,22,62,6,0.0523,0.0809,-0.0006,0.0002,-0.0008,-0.002
+primary_JunOct_5d,7,28,5,0.1139,0.1321,-0.0042,0.0011,-0.0053,-0.089

@@ -1,0 +1,5 @@
+species_group,records_in_hw_months,records_total,mean_share_all,adj_difference,relative_difference,rank_by_relative_shift
+Aurelia labiata,23,91,0.0078,0.0007,0.083,1
+Phacellophora camtschatica,397,1313,0.0484,0.0016,0.034,2
+Cyanea ferruginea,119,811,0.0719,-0.0075,-0.105,3
+other / unresolved,0,4,0.0004,-0.0,-0.132,4
