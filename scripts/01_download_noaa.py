@@ -3,7 +3,8 @@ Idempotent: skips completed past years; always refetches the current year. Downl
 import requests, pathlib, datetime as dt, sys, time
 ROOT = pathlib.Path(__file__).resolve().parents[1]; OUT = ROOT/"data"/"raw"/"noaa"; OUT.mkdir(parents=True, exist_ok=True)
 URL = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
-STATIONS = {"9446484": range(1996, 2027), "9447130": range(1996, 2020)}  # Tacoma main; Seattle cross-check (ends 2018)
+STATIONS = {"9446484": range(1996, 2027), "9447130": range(1996, 2020),  # Tacoma main; Seattle cross-check (ends 2018)
+            "9444900": range(1996, 2027), "9449880": range(1996, 2027)}  # Port Townsend, Friday Harbor: tie-break checks
 today = dt.date.today()
 for st, years in STATIONS.items():
     for y in years:
