@@ -1,0 +1,9 @@
+baseline,scope,n_events,heatwave_days,longest_days
+excl_2007_2017,all_years_to_2025,55,510,63
+excl_2007_2017,excl_2007_2017_to_2025,39,378,63
+excl_2007_2017,partial_2026,11,173,62
+excl_2007_2017,study_window_2019_2025,25,294,63
+full_1998_2025,all_years_to_2025,67,674,63
+full_1998_2025,excl_2007_2017_to_2025,49,498,63
+full_1998_2025,partial_2026,12,197,64
+full_1998_2025,study_window_2019_2025,30,369,63

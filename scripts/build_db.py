@@ -1,6 +1,7 @@
 """Load raw NOAA CSVs into DuckDB (data/jelly.duckdb), then run sql/*.sql in filename order. Load + run only."""
-import duckdb, pathlib, sys
+import duckdb, pathlib, sys, os
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+os.chdir(ROOT)  # the SQL files write outputs/ with relative paths
 con = duckdb.connect(str(ROOT/"data"/"jelly.duckdb"))
 con.execute(f"""CREATE OR REPLACE TABLE raw_noaa_hourly AS
 SELECT regexp_extract(filename, '(\\d{{7}})_\\d{{4}}\\.csv$', 1) AS station,

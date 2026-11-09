@@ -1,3 +1,3 @@
-is_heatwave_year,n_years,years,mean_junoct_share,mean_first_sighting_doy_from_apr1,mean_tenth_record_doy_from_apr1
-false,5,"[2019, 2020, 2021, 2022, 2024]",0.1278,115.0,147.0
-true,2,"[2023, 2025]",0.1082,109.0,138.0
+is_heatwave_year,n_years,years,mean_junoct_share
+false,5,"[2019, 2020, 2021, 2022, 2024]",0.1278
+true,2,"[2023, 2025]",0.1082

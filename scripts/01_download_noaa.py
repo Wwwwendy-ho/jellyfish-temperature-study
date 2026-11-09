@@ -9,11 +9,15 @@ today = dt.date.today()
 for st, years in STATIONS.items():
     for y in years:
         f = OUT/f"{st}_{y}.csv"
-        if f.exists() and y < today.year: continue
+        if f.exists() and y < today.year - 1: continue          # past, complete years are kept; current and previous year are refetched
         end = min(dt.date(y, 12, 31), today)
         p = dict(product="water_temperature", station=st, begin_date=f"{y}0101", end_date=end.strftime("%Y%m%d"),
                  units="metric", time_zone="gmt", format="csv", interval="h")
         r = requests.get(URL, params=p, timeout=120)
-        if r.status_code != 200 or r.text.lstrip().startswith("Error") or "No data" in r.text[:200] or len(r.text) < 50:
-            print(st, y, "no data"); f.unlink(missing_ok=True); continue
-        f.write_text(r.text); print(st, y, len(r.text.splitlines()) - 1, "rows"); time.sleep(0.3)
+        r.raise_for_status()                                      # any HTTP error stops the run instead of silently shrinking the data
+        text = r.text
+        if text.lstrip().startswith("Error"):
+            if "No data was found" in text:                       # a genuinely empty station-year (e.g. before the record starts)
+                print(st, y, "no data"); f.unlink(missing_ok=True); continue
+            raise RuntimeError(f"NOAA error for {st} {y}: {text[:200]}")
+        f.write_text(text); print(st, y, len(text.splitlines()) - 1, "rows"); time.sleep(0.3)

@@ -37,3 +37,20 @@ SELECT d.baseline, d.yr, d.days_observed, d.hot_days, coalesce(e.n_events, 0) AS
        d.yr BETWEEN 2007 AND 2017 AS tacoma_offset_period
 FROM days d LEFT JOIN ev e USING (baseline, yr) ORDER BY d.baseline, d.yr;
 COPY heatwave_year_summary TO 'outputs/heatwave_year_summary_tacoma.csv' (HEADER);
+
+-- Event totals by scope. 2026 is partial and changes with every rerun, and 2007-2017 is a period when Tacoma looks
+-- cold-biased, so the headline totals are capped at 2025-12-31 and shown with and without 2007-2017; 2026 is separate.
+CREATE OR REPLACE TABLE heatwave_event_summary AS
+WITH scoped AS (
+  SELECT baseline, 'all_years_to_2025' AS scope, duration_days FROM heatwave_events WHERE end_date <= DATE '2025-12-31'
+  UNION ALL
+  SELECT baseline, 'excl_2007_2017_to_2025', duration_days FROM heatwave_events
+    WHERE end_date <= DATE '2025-12-31' AND NOT (start_date >= DATE '2007-01-01' AND start_date <= DATE '2017-12-31')
+  UNION ALL
+  SELECT baseline, 'study_window_2019_2025', duration_days FROM heatwave_events
+    WHERE start_date >= DATE '2019-01-01' AND end_date <= DATE '2025-12-31'
+  UNION ALL
+  SELECT baseline, 'partial_2026', duration_days FROM heatwave_events WHERE start_date >= DATE '2026-01-01')
+SELECT baseline, scope, count(*) AS n_events, sum(duration_days) AS heatwave_days, max(duration_days) AS longest_days
+FROM scoped GROUP BY baseline, scope ORDER BY baseline, scope;
+COPY heatwave_event_summary TO 'outputs/heatwave_event_summary.csv' (HEADER);

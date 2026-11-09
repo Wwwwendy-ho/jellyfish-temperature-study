@@ -40,3 +40,8 @@ SELECT month, sum(n_jelly) AS n_jelly, sum(n_panel) AS n_panel,
        round(sum(n_jelly) * 1.0 / (sum(n_jelly) + sum(n_panel)), 4) AS pooled_share
 FROM effort_monthly GROUP BY month ORDER BY month;
 COPY effort_by_calendar_month TO 'outputs/effort_by_calendar_month.csv' (HEADER);
+
+-- Comparison-panel records per group and year (shows how fast each group's records grew, i.e. how neutral the denominator is).
+CREATE OR REPLACE TABLE panel_group_yearly AS
+SELECT group_name, year, sum(n_records) AS n_records FROM raw_gbif_comparison GROUP BY ALL ORDER BY group_name, year;
+COPY panel_group_yearly TO 'outputs/panel_group_yearly.csv' (HEADER);

@@ -1,0 +1,17 @@
+variant,n_months,n_years,n_hw_months,fe_estimate,se_unclustered
+primary_5d,35,7,7,-0.007,0.0274
+any_heatwave_day,35,7,8,-0.0144,0.0261
+full_baseline_5d,35,7,12,-0.0094,0.0258
+threshold_10d,35,7,3,-0.0148,0.0453
+drop_year_2019,30,6,6,0.0184,0.0242
+drop_year_2020,30,6,7,-0.0048,0.0288
+drop_year_2021,30,6,6,-0.0069,0.0293
+drop_year_2022,30,6,7,-0.0088,0.0282
+drop_year_2023,30,6,6,-0.0077,0.0327
+drop_year_2024,30,6,6,-0.0231,0.0301
+drop_year_2025,30,6,4,-0.0158,0.0364
+panel_only_Cetacea,35,7,7,-0.0848,0.0528
+panel_only_Decapoda,35,7,7,-0.0247,0.0354
+panel_only_Echinodermata,35,7,7,0.0274,0.0647
+panel_only_Otariidae,35,7,7,-0.0592,0.042
+panel_only_Phocidae,35,7,7,-0.0577,0.0481

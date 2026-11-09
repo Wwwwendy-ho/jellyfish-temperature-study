@@ -33,16 +33,27 @@ ax.xaxis.set_major_locator(mdates.YearLocator()); ax.xaxis.set_major_formatter(m
 ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.1), fontsize=8.5, ncol=2); ax.set_ylim(0, m.jelly_share.max() * 100 * 1.08)
 fig.tight_layout(); fig.savefig(OUT/"fig2_monthly_share.png", dpi=200); plt.close(fig)
 
-# 3. Per-year adjusted difference (heatwave month minus other months, Jun-Oct), primary analysis
-y = pd.read_csv(ROOT/"outputs"/"heatwave_vs_normal_by_year.csv"); s = pd.read_csv(ROOT/"outputs"/"heatwave_vs_normal_summary.csv").set_index("analysis_id")
-pooled = s.loc["primary_JunOct_5d", "adj_difference"] * 100
-fig, ax = plt.subplots(figsize=(7, 3.8))
-ax.axhline(0, color=INK2, lw=1)
-ax.axhline(pooled, color=BLUE, lw=1, ls="--"); ax.text(len(y) - 0.55, pooled - 0.4, f"Pooled: {pooled:+.2f}", color=INK2, fontsize=8.5, ha="right", va="top"); ax.set_xlim(-0.5, len(y) - 0.5)
-x = range(len(y)); ax.scatter(x, y.season_adjusted_difference * 100, s=70, color=BLUE, zorder=3, edgecolor=SURF, linewidth=1.5)
-for i, r in y.iterrows(): ax.annotate(f"{r.season_adjusted_difference*100:+.1f}", (i, r.season_adjusted_difference*100), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8.5, color=INK2)
-ax.set_xticks(list(x)); ax.set_xticklabels([f"{int(v)}\n({int(h)} heatwave mo.)" for v, h in zip(y.year, y.n_hw_months)], fontsize=8.5)
-ax.set_ylabel("Share difference (percentage points)"); ax.grid(axis="y", color=GRID, lw=0.6); ax.set_axisbelow(True); ax.set_ylim(-9.5, 7)
-ax.set_title("Heatwave minus other months, Jun-Oct, season-adjusted, by year", loc="left", color=INK, fontsize=11)
-fig.tight_layout(); fig.savefig(OUT/"fig3_heatwave_vs_normal_by_year.png", dpi=200); plt.close(fig)
+# 3. Robustness: two-way fixed-effects estimate of (heatwave month - other months) in jellyfish share, with +/-1.96 unclustered SE
+r = pd.read_csv(ROOT/"outputs"/"robustness_fe_estimates.csv")
+def label(v):
+    if v == "primary_5d": return "Primary (>=5 heatwave days)"
+    if v == "threshold_10d": return ">=10 heatwave days"
+    if v == "any_heatwave_day": return "Any heatwave day"
+    if v == "full_baseline_5d": return "Full-record baseline"
+    if v.startswith("drop_year_"): return "Drop " + v[-4:]
+    return "Panel = " + v.replace("panel_only_", "")
+r["label"] = r.variant.map(label)
+r = r.iloc[::-1].reset_index(drop=True)
+fig, ax = plt.subplots(figsize=(8, 6.2))
+ax.axvline(0, color=INK2, lw=1)
+yy = range(len(r))
+ax.errorbar(r.fe_estimate * 100, list(yy), xerr=1.96 * r.se_unclustered * 100, fmt="none", ecolor=GRID if False else "#9a9994", elinewidth=1.2, capsize=0, zorder=1)
+ax.scatter(r.fe_estimate * 100, list(yy), s=46, color=BLUE, zorder=3, edgecolor=SURF, linewidth=1)
+prim = r.index[r.variant == "primary_5d"][0]
+ax.scatter([r.fe_estimate[prim] * 100], [prim], s=70, color=ORANGE, zorder=4, edgecolor=SURF, linewidth=1)
+ax.set_yticks(list(yy)); ax.set_yticklabels(r.label, fontsize=8.5)
+ax.set_xlabel("Heatwave minus other months, jellyfish share (percentage points)\nBars: +/-1.96 x unclustered SE (probably too narrow)")
+ax.grid(axis="x", color=GRID, lw=0.6); ax.set_axisbelow(True)
+ax.set_title("Heatwave effect on jellyfish share: estimates under alternative choices", loc="left", color=INK, fontsize=11)
+fig.tight_layout(); fig.savefig(OUT/"fig3_robustness.png", dpi=200); plt.close(fig)
 print("charts written:", sorted(p.name for p in OUT.glob("*.png")))
