@@ -33,3 +33,10 @@ JOIN raw_gbif_comparison c ON c.year = s.year AND c.month = s.month
 LEFT JOIN (SELECT year, month, count(*) AS n_jelly FROM gbif_jelly_valid GROUP BY ALL) j ON j.year = s.year AND j.month = s.month
 ORDER BY c.group_name, s.month_start;
 COPY effort_monthly_by_group TO 'outputs/effort_monthly_by_group.csv' (HEADER);
+
+-- Pooled share by calendar month (sum of jellyfish / sum of jellyfish + panel over 2019-2025): the seasonal pattern.
+CREATE OR REPLACE TABLE effort_by_calendar_month AS
+SELECT month, sum(n_jelly) AS n_jelly, sum(n_panel) AS n_panel,
+       round(sum(n_jelly) * 1.0 / (sum(n_jelly) + sum(n_panel)), 4) AS pooled_share
+FROM effort_monthly GROUP BY month ORDER BY month;
+COPY effort_by_calendar_month TO 'outputs/effort_by_calendar_month.csv' (HEADER);

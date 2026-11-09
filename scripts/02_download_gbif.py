@@ -34,6 +34,10 @@ for g, k in PANEL.items():
         got = {int(c["name"]): c["count"] for c in d["facets"][0]["counts"]}
         cm += [dict(group_name=g, taxon_key=k, year=y, month=m, n_records=got.get(m, 0)) for m in range(1, 13)]
 pd.DataFrame(cm).to_csv(OUT/"comparison_monthly.csv", index=False)
+# 3. Context only: jellyfish record counts per year before the study window (same box and dataset), written to outputs/.
+d = get(dict(BOX, taxonKey=352, year="2010,2018", limit=0, facet="year", facetLimit=20))
+pre = sorted((int(c["name"]), c["count"]) for c in d["facets"][0]["counts"])
+pd.DataFrame(pre, columns=["year", "n_jellyfish_records"]).to_csv(ROOT/"outputs"/"gbif_jellyfish_counts_2010_2018.csv", index=False)
 json.dump(dict(lookup_date=dt.date.today().isoformat(), api=S, filters=BOX, jellyfish_taxonKey=352, panel=PANEL,
                jellyfish_api_count=total, jellyfish_rows_downloaded=len(df)), open(OUT/"gbif_query_meta.json", "w"), indent=1)
 print("jellyfish rows", len(df), "api count", total, "| comparison rows", len(cm))

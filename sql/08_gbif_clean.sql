@@ -30,4 +30,4 @@ UNION ALL SELECT 'not identified to species rank', count(*), '' FROM gbif_jelly 
 UNION ALL SELECT 'taxonomic status not ACCEPTED', count(*), '' FROM gbif_jelly WHERE taxonomicStatus <> 'ACCEPTED'
 UNION ALL SELECT 'licence: ' || CASE WHEN license LIKE '%/by-nc/%' THEN 'CC BY-NC' WHEN license LIKE '%/by/%' THEN 'CC BY' WHEN license LIKE '%/zero/%' THEN 'CC0' ELSE coalesce(license, 'missing') END, count(*), '' FROM gbif_jelly GROUP BY 1
 UNION ALL SELECT 'species: ' || species, count(*), '' FROM gbif_jelly GROUP BY species;
-COPY dq_gbif_jellyfish TO 'outputs/dq_gbif_jellyfish.csv' (HEADER);
+COPY (SELECT * FROM dq_gbif_jellyfish ORDER BY check_name) TO 'outputs/dq_gbif_jellyfish.csv' (HEADER);
