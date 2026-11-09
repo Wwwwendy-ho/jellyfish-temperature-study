@@ -88,3 +88,5 @@ Fresh-clone test (clone of main, bash run_all.sh, 2m49s, exit 0): 19 of 21 resul
 NOAA terms read from tidesandcurrents.noaa.gov/disclaimers.html on 2026-11-09 (host added to the environment allowlist with approval): "information on government servers are in the public domain, unless specifically annotated otherwise, and may be used freely by the public"; "NOS requests that attribution be given whenever NOS material is reproduced and re-disseminated."
 GBIF citation: dataset-level DOI 10.15468/ab3s5x from the GBIF dataset API (iNaturalist Research-grade Observations); a record-level DOI would need a GBIF download made with the user's GBIF account.
 Still for the user: rewrite README in own words; port/run run_all.ps1 on Windows; make repo public when ready; resume/LinkedIn line stays "in progress" until then (assistant does not edit those).
+
+Re-test on pushed commit 6c8a8fe (fresh clone, run_all.sh, exit 0): 22 of 23 result CSVs byte-identical; the one difference is dq_noaa_station_year.csv rows for 2026 (live NOAA feed, extra hours).
