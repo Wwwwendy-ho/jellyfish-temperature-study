@@ -36,8 +36,9 @@ WITH d1 AS (SELECT *, y - avg(y) OVER (PARTITION BY variant, month) AS y1, x - a
      fit AS (SELECT variant, count(*) AS n_months, count(DISTINCT year) AS n_years, sum(x) AS n_hw_months,
                     sum(x2 * y2) / nullif(sum(x2 * x2), 0) AS beta, sum(x2 * x2) AS sxx, sum(y2 * y2) AS syy, sum(x2 * y2) AS sxy FROM d2 GROUP BY variant)
 SELECT variant, n_months, n_years, n_hw_months,
-       round(beta, 4) AS fe_estimate,
-       round(sqrt(((syy - beta * sxy) / (n_months - n_years - 4)) / sxx), 4) AS se_unclustered   -- df = n - (4 month dummies) - (years - 1) - 1
+       -- round to 8 places first so parallel-sum float noise cannot flip the 4th decimal on a boundary value
+       round(round(beta, 8), 4) AS fe_estimate,
+       round(round(sqrt(((syy - beta * sxy) / (n_months - n_years - 4)) / sxx), 8), 4) AS se_unclustered   -- df = n - (4 month dummies) - (years - 1) - 1
 FROM fit
 ORDER BY CASE WHEN variant = 'primary_5d' THEN 0 WHEN variant LIKE 'drop_year_%' THEN 2 WHEN variant LIKE 'panel_only_%' THEN 3 ELSE 1 END, variant;
 COPY robustness_fe_estimates TO 'outputs/robustness_fe_estimates.csv' (HEADER);
