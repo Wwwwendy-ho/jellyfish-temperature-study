@@ -13,7 +13,7 @@ An AI assistant (Claude) assisted with manual, repetitive tasks and code writing
 | Source | What | Notes |
 |---|---|---|
 | NOAA CO-OPS (api.tidesandcurrents.noaa.gov) | Hourly water temperature: Tacoma 9446484 (1996–2026, main series), Seattle 9447130 (1996–Jan 2019), Port Townsend 9444900 and Friday Harbor 9449880 (reference stations) | NOAA states that information on its servers is in the public domain unless annotated otherwise and may be used freely, and requests attribution (tidesandcurrents.noaa.gov/disclaimers.html, read 2026-11-09). |
-| GBIF (api.gbif.org), iNaturalist research-grade dataset | 2,577 jellyfish (class Scyphozoa) records in a Puget Sound box (lat 47.0–48.5, lon −123.2 to −122.2), 2019–2025 | Licences: CC BY-NC 2,339, CC BY 169, CC0 69. Looked up 2026-11-09. Observer names were not stored. |
+| GBIF (api.gbif.org), iNaturalist research-grade dataset | 2,577 jellyfish (class Scyphozoa) records in a Puget Sound box (lat 47.0–48.5, lon −123.2 to −122.2), 2019–2025 | Licences: CC BY-NC 2,339, CC BY 169, CC0 69. Looked up 2026-11-09. Observer names were not stored. The exact records are GBIF download doi:10.15468/dl.bx48ny (2,577 records, created 2026-11-09); every record ID in it matches the analysis data. |
 | GBIF, same dataset and box | Monthly record counts for a comparison panel: Echinodermata, Decapoda, Phocidae, Otariidae, Cetacea (32,753 records) | Used as the denominator, to adjust for how many people were looking. |
 
 Species in the jellyfish records: *Phacellophora camtschatica* 1,473; *Cyanea ferruginea* 952; *Aurelia labiata* 143; *Chrysaora fuscescens* 8; one not identified to species. "Jellyfish" here means Scyphozoa only (not hydrozoan medusae). Names are GBIF accepted names as of the lookup date.
@@ -70,7 +70,7 @@ The other leave-one-year-out and single-group variants are in the CSV. The speci
 - The baseline has 17 years, shorter than the usual 30-year climatology, and 7 of them are the study years themselves, so the tested years help set their own threshold. The method is simplified from Hobday et al. (2016): no gap-bridging between events and a smoothed pooled percentile. If the water has warmed over the baseline period (not tested here), a fixed baseline flags later years more often.
 - One Tacoma station stands in for a box about 1.5° of latitude tall, and the 2007–2017 station problem is unresolved.
 - Jellyfish cannot be tested against 2014–2016: there are too few records before 2019 (`outputs/gbif_jellyfish_counts_2010_2018.csv`: 14, 17 and 24 records in 2014, 2015 and 2016).
-- iNaturalist records are added, re-identified and relicensed over time, so GBIF counts may differ if the pipeline is rerun later. The committed outputs are a snapshot from 2026-11-09. NOAA's feed is live, so 2026 values also change; 2019–2025 temperature results should not.
+- iNaturalist records are added, re-identified and relicensed over time, so GBIF counts may differ if the pipeline is rerun later. The committed outputs are a snapshot from 2026-11-09, and the GBIF download DOI above identifies the exact records used. NOAA's feed is live, so 2026 values also change; 2019–2025 temperature results should not.
 
 ## Reproduce
 ```bash
@@ -82,4 +82,5 @@ This downloads about 28 MB into `data/raw/` (git-ignored), builds `data/jelly.du
 ## Licence and credits
 - Code: MIT (see `LICENSE`). The MIT licence covers the code only; the data keep their own terms.
 - Water temperature: NOAA National Ocean Service, Center for Operational Oceanographic Products and Services (CO-OPS), tidesandcurrents.noaa.gov, retrieved via api.tidesandcurrents.noaa.gov.
-- iNaturalist contributors, iNaturalist (2026). iNaturalist Research-grade Observations. iNaturalist.org. Occurrence dataset https://doi.org/10.15468/ab3s5x accessed via GBIF.org on 2026-11-09. This is the dataset-level citation (the project used a filtered subset through the GBIF search API, not a GBIF download). Records are used under their own licences (CC0, CC BY, CC BY-NC); non-commercial use only.
+- GBIF.org (09 November 2026) GBIF Occurrence Download https://doi.org/10.15468/dl.bx48ny. This is the exact set of 2,577 records used. The analysis pulled the same records through the GBIF search API on the same day, and `scripts/verify_gbif_download.py` confirms that every record ID matches.
+- iNaturalist contributors, iNaturalist (2026). iNaturalist Research-grade Observations. iNaturalist.org. Occurrence dataset https://doi.org/10.15468/ab3s5x accessed via GBIF.org on 2026-11-09. This is the dataset-level citation. Records are used under their own licences (CC0, CC BY, CC BY-NC); non-commercial use only.
