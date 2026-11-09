@@ -77,7 +77,7 @@ The other leave-one-year-out and single-group variants are in the CSV. The speci
 pip install -r requirements.txt
 python run_all.py        # Windows, macOS and Linux (also: bash run_all.sh, or .\run_all.ps1 in PowerShell)
 ```
-This downloads about 28 MB into `data/raw/` (git-ignored), builds `data/jelly.duckdb`, runs `sql/01` to `12` in order, and writes `outputs/`. A fresh clone run with `bash run_all.sh` on Linux (Python 3.13) reproduced 22 of 23 result files byte-for-byte; the other differed only in 2026 rows from the live feed. `python run_all.py` has been run on Linux only, and `run_all.ps1` has not been run. Layout: `sql/` numbered queries, `scripts/` download, load and chart code only, `outputs/` result CSVs and charts, `SESSION_LOG.md` decisions and checks.
+This downloads about 28 MB into `data/raw/` (git-ignored), builds `data/jelly.duckdb`, runs `sql/01` to `12` in order, and writes `outputs/`. A fresh clone run with `python run_all.py` on Linux (Python 3.13) reproduced all 26 result CSVs byte-for-byte (an earlier fresh run differed only in 2026 rows, because NOAA's feed is live). It has been run on Linux only, and `run_all.ps1` has not been run. Layout: `sql/` numbered queries, `scripts/` download, load and chart code only, `outputs/` result CSVs and charts, `SESSION_LOG.md` decisions and checks.
 
 ## Licence and credits
 - Code: MIT (see `LICENSE`). The MIT licence covers the code only; the data keep their own terms.
